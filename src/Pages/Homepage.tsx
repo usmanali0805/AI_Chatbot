@@ -5,6 +5,7 @@ import mic from '../assets/svg/mic.svg'
 import { useEffect, useState, useRef } from 'react'
 import Message from '../component/Message'
 import { useHistory } from '../context/HistoryContext'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 interface HomeProps {
   question: string;
@@ -26,11 +27,27 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
   const [temporarychat, setTemporarychat] = useState(false)
   const ScrollTop = useRef<HTMLDivElement | null>(null)
   const [loader, setLoader] = useState(false)
+
+  const {
+    transcript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+  return null;
+}
+
+console.log(input)
+
+const StartListen= ()=> {SpeechRecognition.startListening({continuous:true ,language: "en-IN",})}
+
   const Handleinput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
   }
+  
 
-  const apiKey: string = "AIzaSyA4yQ0DdXgt-JEvzlEMtLwJHKzNqttR9PU";
+  
+  const apiKey:string= import.meta.env.VITE_API_KEY;
   interface GeminiResponce {
     candidates?: {
       content?: {
@@ -54,28 +71,30 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
     }
     setLoader(true)
     try {
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-goog-api-key": apiKey
-          },
-          body: JSON.stringify(body)
+      if(apiKey){
+        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-goog-api-key": apiKey
+            },
+            body: JSON.stringify(body)
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status:${response.status}`);
         }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status:${response.status}`);
-      }
-      const data: GeminiResponce = await response.json();
-      if (data) {
-        const aiText = (data as any)?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-        setChat((prev) => [...prev, { role: "chatbot", text: aiText }]);
-        setTimeout(() => {
-          ScrollTop.current?.scrollIntoView({ behavior: "smooth" })
-        }, 500);
-        setLoader(false)
+        const data: GeminiResponce = await response.json();
+        if (data) {
+          const aiText = (data as any)?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+          setChat((prev) => [...prev, { role: "chatbot", text: aiText }]);
+          setTimeout(() => {
+            ScrollTop.current?.scrollIntoView({ behavior: "smooth" })
+          }, 500);
+          setLoader(false)
+        }
       }
 
     } catch (error) {
@@ -83,6 +102,13 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
       setLoader(false)
     }
   }
+
+  useEffect(() => {
+  if (transcript) {
+    setInput(transcript);
+  }
+}, [transcript]);
+
 
   useEffect(() => {
     if (question.length > 0) {
@@ -130,7 +156,8 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
   return (
     <section className={`w-full transform transition-linear ease-in-out duration-400 m-0 ${margin} h-screen relative bg-[#212121]`}>
       <Navbar setTemporarychat={setTemporarychat} temporarychat={temporarychat} />
-      {inptbtn == false && <div className='w-full h-full flex flex-col gap-6 justify-center items-center'>
+      {inptbtn == false && 
+      <div className='w-full h-full flex flex-col gap-6 justify-center items-center'>
         {temporarychat ? <div className='flex justify-center items-center w-[50%] sm:w-[30%] flex-col gap-1'>
           <h1 className='sm:text-[30px] text-[25px]'>Temporary Chat</h1>
           <p className='sm:text-[13px] text-[8px] text-zinc-400 text-center'>This chat won't appear in history, use or update ChatGPT's memory, or be used to train our models. For safety purposes, we may keep a copy of this chat for up to 30 days.</p>
@@ -149,7 +176,7 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
                 </p>
               </span>
               <span className='flex gap-3 items-center'>
-                <p className=' p-1 rounded-full hover:bg-[#4e4e4e]'>
+                <p onClick={StartListen} className=' p-1 rounded-full hover:bg-[#4e4e4e]'>
                   <img className='w-[18px] ' src={mic} alt="" />
                 </p>
                 <button type='submit' onClick={SendAsk} className={`p-2 rounded-full cursor-pointer bg-[#636363] ${input.length > 0 ? "hover:bg-zinc-500" : ""}`}>
