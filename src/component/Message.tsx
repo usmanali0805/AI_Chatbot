@@ -4,7 +4,7 @@ import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { Typewriter } from 'react-simple-typewriter'
 import CopyBtn from "./CopyBtn";
-import { Ellipsis, ThumbsDown, ThumbsUp } from "lucide-react";
+import List from "./List";
 
 
 interface Msg {
@@ -18,7 +18,6 @@ interface Msgprops {
 
 const Message: React.FC<Msgprops> = ({ msg }) => {
   const [answer, setAnswer] = useState<string[]>([]);
-  const [like, setLike] = useState<Boolean>(false);
   const [hover, setHover] = useState(false)
 
 
@@ -29,15 +28,6 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
   const setHeading = (str: string) => {
     return str.replace(/^(\*\*)(.+)(\*)$/, "$2");
   };
-
-  const HandleLike =() => {
-    if (!like) {
-      setLike(true)
-    } else {
-      setLike(false);
-      
-    }
-  }
   
 
   useEffect(() => {
@@ -95,18 +85,7 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
                   delaySpeed={1000}
                 />
               </div>
-              <div className="flex gap-3 items-center">
-                <CopyBtn msg={msg.text} />
-                <like/>
-                {!like&&
-                  <button className="m-2 cursor-pointer h-[15px] w-[15px] rounded-full hover:bg-gray-600">
-                  <ThumbsDown size={18} />
-                </button>
-                }
-                <button className="m-2 cursor-pointer h-[15px] w-[15px] rounded-full hover:bg-gray-600">
-                    <Ellipsis size={18}/>
-                </button>
-              </div>
+              <List msg = {msg.text}/>
             </>
             : answer.map((item, index) => (
               <>

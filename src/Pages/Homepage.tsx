@@ -37,7 +37,6 @@ const Homepage: React.FC<HomeProps> = ({ question, newchat, setNewchat, margin }
   return null;
 }
 
-console.log(input)
 
 const StartListen= ()=> {SpeechRecognition.startListening({continuous:true ,language: "en-IN",})}
 
