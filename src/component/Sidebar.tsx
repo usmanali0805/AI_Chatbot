@@ -1,15 +1,15 @@
-import { PanelLeftDashed, Search, CirclePlay, LayoutGrid, Trash } from 'lucide-react';
+import { PanelLeftDashed, Search, CirclePlay, LayoutGrid, Trash, User } from 'lucide-react';
 import chatgpt from "../assets/svg/chatgpt.svg";
 import new_chat from "../assets/svg/new_chat.svg";
 import library from "../assets/svg/library.svg";
 import { useHistory } from '../context/HistoryContext';
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SlideProps {
-  setQuestion: (q:string)=> void;
-  setNewchat: (v:boolean)=> void;
-  setSrchbtn: (v:boolean)=>void;
-  setMargin: (p:string)=> void;
+  setQuestion: (q: string) => void;
+  setNewchat: (v: boolean) => void;
+  setSrchbtn: (v: boolean) => void;
+  setMargin: (p: string) => void;
 }
 
 const Sidebar: React.FC<SlideProps> = ({ setQuestion, setNewchat, setSrchbtn, setMargin }) => {
@@ -34,12 +34,12 @@ const Sidebar: React.FC<SlideProps> = ({ setQuestion, setNewchat, setSrchbtn, se
   }
 
   useEffect(() => {
-  if (window.innerWidth >= 640) {
-    setMargin("sm:ml-[18vw]");
-  } else {
-    setMargin("");
-  }
-}, []);
+    if (window.innerWidth >= 640) {
+      setMargin("sm:ml-[18vw]");
+    } else {
+      setMargin("");
+    }
+  }, []);
 
 
   return (
@@ -76,8 +76,8 @@ const Sidebar: React.FC<SlideProps> = ({ setQuestion, setNewchat, setSrchbtn, se
               </div>
             </div>
           </section>
-          <section className='p-2'>
-            <div className=' flex flex-col'>
+          <section className='p-2 overflow-y-scroll h-[72vh]'>
+            <div className=' flex flex-col h-fit'>
               <div className='flex p-2 gap-2 w-full rounded-[10px] transition-all duration-100 h-fit cursor-pointer hover:bg-[#303030]'>
                 <CirclePlay className='w-[20px] h-[20px]' />
                 <span className='text-[14px]'>Sora</span>
@@ -95,13 +95,17 @@ const Sidebar: React.FC<SlideProps> = ({ setQuestion, setNewchat, setSrchbtn, se
               <p className='text-[14px] p-2'>No history yet</p>
             ) : (
               history.map((q: string, i: number) => (
-                <ul className='flex items-center  px-1 py-0.5 h-full cursor-pointer' key={i}>
+                <ul className='flex items-center  px-1 py-0.5 h-fit cursor-pointer' key={i}>
                   <li onClick={() => setQuestion(q)} className={`text-[13px] truncate w-full p-1 rounded-[5px] text-zinc-300  text-zinc-350 hover:bg-zinc-700 hover:text-white`}>{q}</li>
                   <Trash onClick={() => RemoveQuestion(q)} className='p-1 rounded-[5px] text-zinc-500 hover:bg-zinc-700 hover:text-zinc-300' />
                 </ul>
               ))
             )}
           </section>
+          <div className='flex gap-3 h-[70px] p-2 items-center border border-t-[1px] border-[#252525]' >
+            <span className='p-2  rounded-full transition-all duration-200 bg-[#3c3b8b] hover:bg-[#4e4bc9]' ><User /></span>
+            <span>Usman</span>
+          </div>
         </section>
 
 

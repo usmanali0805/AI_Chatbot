@@ -25,12 +25,12 @@ const LikeBtn = ({setLike,like}) => {
           setHover(false);
         }}
         onClick={HandleLike}
-        className="m-3 cursor-pointer h-[15px] w-[15px] rounded-full hover:bg-gray-600"
+        className="m-3 cursor-pointer h-[15px] w-[15px] "
       >
         <ThumbsUp size={18} fill={`${like? 'white':''}`} />
       </button>
       {hover && (
-        <div className=" absolute transition-all duration-500 bg-black py-1 px-2 flex justify-center items-center rounded-xl text-[12px] text-white ">
+        <div className=" absolute transition-all duration-500 text-center bg-black py-1 px-2 flex justify-center items-center rounded-xl text-[12px] text-white ">
           Good response
         </div>
       )}

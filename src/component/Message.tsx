@@ -28,7 +28,7 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
   const setHeading = (str: string) => {
     return str.replace(/^(\*\*)(.+)(\*)$/, "$2");
   };
-  
+
 
   useEffect(() => {
     if (msg.role === "chatbot") {
@@ -73,7 +73,7 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
           </div>
         </div>
       ) : (
-        <span className="text-[15px] w-[90%] h-fit">
+        <span className="text-[15px] w-[90%] flex flex-col gap-3 h-fit">
           {answer.length === 1
             ? < >
               <div>
@@ -85,24 +85,30 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
                   delaySpeed={1000}
                 />
               </div>
-              <List msg = {msg.text}/>
+              <List msg={msg.text} />
             </>
-            : answer.map((item, index) => (
-              <>
-                <ul key={index}>
-                  <li
-                    className={
-                      checkHeading(item)
-                        ? "font-bold block py-3 text-[17px]"
-                        : "pl-[5px]"
-                    }
-                  >
-                    {checkHeading(item) ? setHeading(item) : <ReactMarkdown components={renderer}>{item}</ReactMarkdown>}
-                  </li>
-                </ul>
-                <CopyBtn msg={msg.text} />
-              </>
-            ))}
+            :
+            <div>
+              {
+                answer.map((item, index) => (
+                  <>
+                    <ul key={index}>
+                      <li
+                        className={
+                          checkHeading(item)
+                            ? "font-bold block py-3 text-[17px]"
+                            : "pl-[5px]"
+                        }
+                      >
+                        {checkHeading(item) ? setHeading(item) : <ReactMarkdown components={renderer}>{item}</ReactMarkdown>}
+                      </li>
+                    </ul>
+                  </>
+                ))
+              }
+              <List msg={msg.text} />
+            </div>
+          }
         </span>
       )}
     </div>

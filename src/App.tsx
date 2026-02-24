@@ -18,6 +18,7 @@ function App() {
         <Sidebar setMargin={setMargin} setSrchbtn={setSrchbtn} setNewchat={setNewchat} setQuestion={setQuestion} />
         <Homepage margin={margin} setNewchat={setNewchat} newchat={newchat} question={question} />
       </div>
+      
     </HistoryProvider>
   )
 }
