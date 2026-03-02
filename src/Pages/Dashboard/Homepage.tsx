@@ -1,10 +1,10 @@
 import { ArrowUp, Plus } from 'lucide-react'
-import Navbar from '../component/Navbar'
-import setting from '../assets/svg/setting.svg'
-import mic from '../assets/svg/mic.svg'
+import Navbar from '../../component/Navbar'
+import setting from '../../assets/svg/setting.svg'
+import mic from '../../assets/svg/mic.svg'
 import { useEffect, useState, useRef } from 'react'
-import Message from '../component/Message'
-import { useHistory } from '../context/HistoryContext'
+import Message from '../../component/Message'
+import { useHistory } from '../../context/HistoryContext'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 interface HomeProps {

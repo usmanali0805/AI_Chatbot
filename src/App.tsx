@@ -1,25 +1,20 @@
 
-import { useState } from 'react'
-import './App.css'
-import Homepage from './Pages/Homepage'
-import Sidebar from './component/Sidebar'
-import { HistoryProvider } from './context/HistoryContext'
-import Search from './component/Search'
+import React from 'react'
+import Dashborad from './Dashborad'
+import { Route, Routes } from 'react-router'
+import Login from './Pages/Auth/Login'
+import Signup from './Pages/Auth/Signup'
 
 function App() {
-  const [question, setQuestion] = useState<string>('')
-  const [newchat, setNewchat] = useState<boolean>(false)
-  const [srchbtn, setSrchbtn] = useState<boolean>(false)
-  const [margin, setMargin] = useState<string>("ml-[18vw]")
   return (
-    <HistoryProvider>
-      <div className="w-full flex">
-        {srchbtn?<Search setSrchbtn={setSrchbtn} setQuestion={setQuestion}/>:""}
-        <Sidebar setMargin={setMargin} setSrchbtn={setSrchbtn} setNewchat={setNewchat} setQuestion={setQuestion} />
-        <Homepage margin={margin} setNewchat={setNewchat} newchat={newchat} question={question} />
-      </div>
-      
-    </HistoryProvider>
+    <>
+    <Routes>
+      <Route path='/' element={<Dashborad/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/signup' element={<Signup/>}/>
+    </Routes>
+    {/* <Dashborad/> */}
+    </>
   )
 }
 
