@@ -7,21 +7,24 @@ import CopyBtn from './CopyBtn';
 
 const List = ({ msg }) => {
     const [like, setLike] = useState<boolean>(false);
+    const [dislike, setDislike] = useState<boolean>(false);
     const [hover, setHover] = useState(false)
 
     return (
         <div className="flex gap-3 items-center">
             <span>
-            <CopyBtn msg={msg} />
+                <CopyBtn msg={msg} />
             </span>
             <span>
-            <LikeBtn like={like} setLike={setLike} />
+                {!dislike &&
+                <LikeBtn like={like} setLike={setLike} />
+                }
             </span>
             <span>
 
-            {!like &&
-                <DisLikeBtn like={like} setLike={setLike} />
-            }
+                {!like &&
+                    <DisLikeBtn dislike={dislike} setDislike={setDislike} />
+                }
             </span>
             <div className='relative '>
 

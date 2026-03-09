@@ -25,7 +25,7 @@ const LikeBtn = ({setLike,like}) => {
           setHover(false);
         }}
         onClick={HandleLike}
-        className="m-3 cursor-pointer h-[15px] w-[15px] "
+        className="m-3 cursor-pointer "
       >
         <ThumbsUp size={18} fill={`${like? 'white':''}`} />
       </button>
