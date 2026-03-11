@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { Typewriter } from 'react-simple-typewriter'
 import CopyBtn from "./CopyBtn";
 import List from "./List";
 
@@ -10,6 +9,7 @@ import List from "./List";
 interface Msg {
   role: "chatbot" | "user";
   text: string;
+  isStreaming?: boolean;
 }
 
 interface Msgprops {
@@ -17,36 +17,14 @@ interface Msgprops {
 }
 
 const Message: React.FC<Msgprops> = ({ msg }) => {
-  const [answer, setAnswer] = useState<string[]>([]);
   const [hover, setHover] = useState(false)
-
-
-  function checkHeading(str: string): boolean {
-    return /^(\*\*)(.+)(\*)$/.test(str);
-  }
-
-  const setHeading = (str: string) => {
-    return str.replace(/^(\*\*)(.+)(\*)$/, "$2");
-  };
-
-
-  useEffect(() => {
-    if (msg.role === "chatbot") {
-      const arr = msg.text;
-      const aitext = arr
-        .split("* ")
-        .map((item: string) => item.trim())
-        .filter((item: string) => item.length > 0);
-      setAnswer(aitext);
-    }
-  }, [msg]);
 
   const renderer = {
     code({ inline, className, children, ...props }: any) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <SyntaxHighlighter {...props}
-          language={match[2]}
+          language={match[1]}
           style={dark}
           preTag="div"
         >{String(children).replace(/\n$/, "")}</SyntaxHighlighter>
@@ -74,41 +52,11 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
         </div>
       ) : (
         <span className="text-[15px] w-[90%] flex flex-col gap-3 h-fit">
-          {answer.length === 1
-            ? < >
-              <div>
-                <Typewriter
-                  words={answer}
-                  cursor
-                  cursorStyle=''
-                  typeSpeed={30}
-                  delaySpeed={1000}
-                />
-              </div>
-              <List msg={msg.text} />
-            </>
-            :
-            <div>
-              {
-                answer.map((item, index) => (
-                  <>
-                    <ul key={index}>
-                      <li
-                        className={
-                          checkHeading(item)
-                            ? "font-bold block py-3 text-[17px]"
-                            : "pl-[5px]"
-                        }
-                      >
-                        {checkHeading(item) ? setHeading(item) : <ReactMarkdown components={renderer}>{item}</ReactMarkdown>}
-                      </li>
-                    </ul>
-                  </>
-                ))
-              }
-              <List msg={msg.text} />
-            </div>
-          }
+          <div className="prose prose-invert max-w-none">
+            <ReactMarkdown components={renderer}>{msg.text}</ReactMarkdown>
+            {msg.isStreaming && <span className="inline-block w-2 h-4 ml-1 bg-gray-300 animate-pulse rounded-sm" />}
+          </div>
+          {!msg.isStreaming && <List msg={msg.text} />}
         </span>
       )}
     </div>
@@ -116,12 +64,6 @@ const Message: React.FC<Msgprops> = ({ msg }) => {
 };
 
 export default Message;
-
-
-
-
-
-// Example: Using forEach to display items in an array
 
 
 
